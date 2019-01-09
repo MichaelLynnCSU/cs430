@@ -1,0 +1,335 @@
+MariaDB [mikelynn]> CREATE TABLE Author (
+    ->     Author_id      INT             NOT NULL,
+    ->     first_name  VARCHAR(14)        NOT NULL,
+    ->     last_name   VARCHAR(16)        NOT NULL,  
+    ->     PRIMARY KEY (Author_id)
+    -> );
+Query OK, 0 rows affected (0.19 sec)
+
+MariaDB [mikelynn]> CREATE TABLE Phone (
+    ->     Author_id    INT                   NOT NULL,
+    ->     pub_num      VARCHAR(50)           NOT NULL,
+    ->     type         VARCHAR(50),
+    ->     FOREIGN KEY (Author_id)  REFERENCES Author (Author_id)  ON DELETE CASCADE,
+    ->     PRIMARY KEY (pub_num, Author_id)
+    -> );
+Query OK, 0 rows affected (0.20 sec)
+
+MariaDB [mikelynn]> CREATE TABLE Publisher (
+    ->     pub_id      INT             NOT NULL,
+    ->     name  VARCHAR(50)           NOT NULL,
+    ->     PRIMARY KEY (pub_id)
+    -> );
+Query OK, 0 rows affected (0.20 sec)
+
+MariaDB [mikelynn]> CREATE TABLE Book (
+    -> 
+    ->     isbn       VARCHAR(50)              NOT NULL,
+    ->     title      VARCHAR(50)NOT NULL,
+    ->     pub_id      INT             NOT NULL,
+    ->     year       DATE              NOT NULL,
+    ->     Author_id   INT             NOT NULL,
+    ->     FOREIGN KEY (pub_id)  REFERENCES Publisher (pub_id)  ON DELETE CASCADE,
+    ->     FOREIGN KEY (Author_id )  REFERENCES Author (Author_id )  ON DELETE CASCADE,
+    ->     PRIMARY KEY (isbn,Author_id)
+    ->  );
+Query OK, 0 rows affected (0.24 sec)
+
+MariaDB [mikelynn]> CREATE TABLE Member (
+    ->     member_id      INT             NOT NULL,
+    ->     first_name  VARCHAR(14)        NOT NULL,
+    ->     last_name   VARCHAR(16)        NOT NULL,  
+    ->     DOB   DATE              NOT NULL,
+    ->     PRIMARY KEY (member_id)
+    -> );
+Query OK, 0 rows affected (0.17 sec)
+
+MariaDB [mikelynn]> source load_auth.dump;
+Query OK, 16 rows affected (0.02 sec)
+Records: 16  Duplicates: 0  Warnings: 0
+
+MariaDB [mikelynn]> source load_pub.dump;
+Query OK, 8 rows affected (0.02 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+MariaDB [mikelynn]> source load_mem.dump;
+Query OK, 32 rows affected (0.04 sec)
+Records: 32  Duplicates: 0  Warnings: 0
+
+MariaDB [mikelynn]> source load_book.dump;
+Query OK, 50 rows affected (0.08 sec)
+Records: 50  Duplicates: 0  Warnings: 0
+
+MariaDB [mikelynn]> SELECT 
+    -> distinct b.isbn
+    -> FROM
+    -> Book b;
++----------------+
+| isbn           |
++----------------+
+| 96-42103-10001 |
+| 96-42103-10002 |
+| 96-42103-10003 |
+| 96-42103-10004 |
+| 96-42103-10005 |
+| 96-42103-10006 |
+| 96-42103-10007 |
+| 96-42103-10008 |
+| 96-42103-10009 |
+| 96-42103-10011 |
+| 96-42103-10022 |
+| 96-42103-10033 |
+| 96-42103-10034 |
+| 96-42103-10040 |
+| 96-42103-10054 |
+| 96-42103-10068 |
+| 96-42103-10081 |
+| 96-42103-10093 |
+| 96-42103-10109 |
+| 96-42103-10206 |
+| 96-42103-10300 |
+| 96-42103-10401 |
+| 96-42103-10502 |
+| 96-42103-10604 |
+| 96-42103-10709 |
+| 96-42103-10800 |
+| 96-42103-10907 |
+| 96-42103-11003 |
++----------------+
+28 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> *
+    -> FROM
+    -> Author a
+    -> ORDER BY 
+    -> a.last_name ASC, a.first_name ASC;
++-----------+------------+-----------+
+| Author_id | first_name | last_name |
++-----------+------------+-----------+
+|       202 | Julie      | Barnes    |
+|       207 | Dickey     | Betts     |
+|       304 | Robert     | Crawley   |
+|       302 | John       | Crichton  |
+|       101 | Bobby      | Ewing     |
+|       210 | Scottie    | Ferguson  |
+|       303 | Aeon       | Flux      |
+|       204 | Mickey     | Hart      |
+|       208 | Waco       | Kid       |
+|       201 | Thomas     | Magnum    |
+|       206 | Perry      | Mason     |
+|       203 | Roger      | Ramjet    |
+|       102 | Red        | Skelton   |
+|       205 | Grace      | Slick     |
+|       209 | Roger      | Thornhill |
+|       301 | Barbara    | Wright    |
++-----------+------------+-----------+
+16 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> *
+    -> FROM
+    -> Member m
+    -> ORDER BY 
+    -> m.last_name ASC, m.first_name ASC;
++-----------+------------+------------+------------+
+| member_id | first_name | last_name  | DOB        |
++-----------+------------+------------+------------+
+|      1800 | Dworkin    | Barimen    | 1950-12-02 |
+|      2004 | Thomas     | Barrow     | 2005-05-05 |
+|      2003 | John       | Bates      | 2001-12-12 |
+|      2015 | Claire     | Bennet     | 2001-03-11 |
+|      2010 | Rita       | Bennett    | 2001-11-12 |
+|      1100 | Bugs       | Bunny      | 1990-06-24 |
+|      2001 | Art        | Clark      | 2001-12-06 |
+|      1700 | Amber      | Corwin     | 1970-12-01 |
+|      1000 | Wiley      | Coyote     | 1961-09-10 |
+|      2002 | Edith      | Crawley    | 1962-09-04 |
+|      2000 | Pol        | Gara       | 1963-01-10 |
+|      1900 | Bel        | Garion     | 1983-01-01 |
+|      2022 | Xander     | Harris     | 2001-06-23 |
+|      2018 | Martha     | Kent       | 1954-02-13 |
+|      2011 | Sun        | Kwon       | 1988-10-19 |
+|      2013 | Clair      | Littleton  | 2001-02-01 |
+|      2012 | John       | Locke      | 2000-01-01 |
+|      1500 | Larry      | Lujack     | 1940-06-06 |
+|      2019 | Paige      | Matthews   | 1977-03-16 |
+|      2009 | Dexter     | Morgan     | 1994-07-11 |
+|      2006 | Jim        | Moriarty   | 1967-03-12 |
+|      1200 | Olive      | Oyl        | 1989-07-19 |
+|      1400 | Roger      | Ramjet     | 1985-01-13 |
+|      2017 | Chloe      | Sullivan   | 2007-05-16 |
+|      2021 | Buffy      | Summers    | 2000-05-26 |
+|      2016 | Mohinder   | Suresh     | 1993-04-15 |
+|      1600 | Thomas     | Tankengine | 1991-04-01 |
+|      2005 | John       | Watson     | 1975-02-22 |
+|      2008 | Skyler     | White      | 1983-04-12 |
+|      2007 | Walter     | White      | 1983-05-14 |
+|      1300 | Alice      | Wonderland | 1989-07-19 |
+|      2020 | Leo        | Wyatt      | 2000-10-01 |
++-----------+------------+------------+------------+
+32 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> *
+    -> FROM
+    -> Publisher p
+    -> ORDER BY 
+    -> p.name ASC;
++--------+----------------------+
+| pub_id | name                 |
++--------+----------------------+
+|  10003 | Amazon               |
+|  10005 | Buy a Boat           |
+|  10002 | Coyote Publishing    |
+|  10006 | Flagstaff Publishing |
+|  10004 | Jerrys Ice Cream     |
+|  10001 | McGraw-Hill          |
+|  10007 | Ram West             |
+|  10000 | Wiley                |
++--------+----------------------+
+8 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> *
+    -> FROM
+    -> Phone p
+    -> ORDER BY 
+    -> p.pub_num ASC;
+Empty set (0.00 sec)
+
+MariaDB [mikelynn]> source load_phone.dump
+Query OK, 23 rows affected (0.07 sec)
+Records: 23  Duplicates: 0  Warnings: 0
+
+MariaDB [mikelynn]> SELECT 
+    -> *
+    -> FROM
+    -> Phone p
+    -> ORDER BY 
+    -> p.pub_num ASC;
++-----------+--------------+------+
+| Author_id | pub_num      | type |
++-----------+--------------+------+
+|       201 | 303-555-1200 | (h)  |
+|       202 | 303-555-1200 | (h)  |
+|       202 | 303-555-1210 | (c)  |
+|       101 | 970-555-1000 | (c)  |
+|       101 | 970-555-1010 | (h)  |
+|       102 | 970-555-1100 | (o)  |
+|       203 | 970-555-1400 | (c)  |
+|       205 | 970-555-1600 | (h)  |
+|       206 | 970-555-1600 | (h)  |
+|       207 | 970-555-1800 | (c)  |
+|       208 | 970-555-1900 | (h)  |
+|       209 | 970-555-2000 | (h)  |
+|       210 | 970-555-2001 | (h)  |
+|       209 | 970-555-2010 | (c)  |
+|       301 | 970-555-2020 | (c)  |
+|       302 | 970-555-2300 | (o)  |
+|       303 | 970-555-2400 | (h)  |
+|       304 | 970-555-2400 | (h)  |
+|       303 | 970-555-2401 | (c)  |
+|       304 | 970-555-2402 | (c)  |
+|       303 | 970-555-2403 | (o)  |
+|       304 | 970-555-2403 | (o)  |
+|       204 | None         |      |
++-----------+--------------+------+
+23 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> m.first_name, m.last_name
+    -> FROM
+    -> Member m
+    -> WHERE
+    -> m.last_name like "b%";
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Bugs       | Bunny     |
+| Dworkin    | Barimen   |
+| John       | Bates     |
+| Thomas     | Barrow    |
+| Rita       | Bennett   |
+| Claire     | Bennet    |
++------------+-----------+
+6 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> distinct b.title
+    -> FROM
+    -> Book b natural join Publisher p
+    -> WHERE
+    -> p.name = 'Coyote Publishing';
++-------------------------+
+| title                   |
++-------------------------+
+| Downton Abbey           |
+| Lacey Discovers Herself |
+| Cubs Win!               |
++-------------------------+
+3 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> SELECT 
+    -> distinct a.Author_id, a.first_name, a.last_name, b.title
+    -> FROM
+    -> Book b natural join Publisher p  natural join Author a
+    -> ORDER BY 
+    -> a.first_name ASC;
++-----------+------------+-----------+------------------------------+
+| Author_id | first_name | last_name | title                        |
++-----------+------------+-----------+------------------------------+
+|       303 | Aeon       | Flux      | Too Many Cooks               |
+|       301 | Barbara    | Wright    | Sam Needs a Friend           |
+|       301 | Barbara    | Wright    | Green is Your Friend         |
+|       301 | Barbara    | Wright    | Cubs Win!                    |
+|       301 | Barbara    | Wright    | Taks McGrill                 |
+|       101 | Bobby      | Ewing     | Escape from Gilligans Island |
+|       101 | Bobby      | Ewing     | Last Train to Clarksville    |
+|       101 | Bobby      | Ewing     | How to Grow Tomatoes         |
+|       101 | Bobby      | Ewing     | How to Grow Cucumbers        |
+|       207 | Dickey     | Betts     | Missing Tomorrow             |
+|       207 | Dickey     | Betts     | Eating Healthy               |
+|       207 | Dickey     | Betts     | Database Theory              |
+|       205 | Grace      | Slick     | Where to Start               |
+|       205 | Grace      | Slick     | Missing Tomorrow             |
+|       302 | John       | Crichton  | To Have and To Cherish       |
+|       302 | John       | Crichton  | How to Digitally Sign        |
+|       302 | John       | Crichton  | Green is Your Friend         |
+|       202 | Julie      | Barnes    | European Football            |
+|       202 | Julie      | Barnes    | American Football            |
+|       202 | Julie      | Barnes    | Lacey Discovers Herself      |
+|       202 | Julie      | Barnes    | Gardening Tips               |
+|       204 | Mickey     | Hart      | Escape from Gilligans Island |
+|       204 | Mickey     | Hart      | Missing Tomorrow             |
+|       204 | Mickey     | Hart      | Hal Finds a Home             |
+|       206 | Perry      | Mason     | Missing Tomorrow             |
+|       102 | Red        | Skelton   | Cubs Win!                    |
+|       102 | Red        | Skelton   | Fixing Computers             |
+|       102 | Red        | Skelton   | How to Digitally Sign        |
+|       102 | Red        | Skelton   | Mr. Smith Goes to Washington |
+|       304 | Robert     | Crawley   | Red Burn                     |
+|       304 | Robert     | Crawley   | To Have and To Cherish       |
+|       304 | Robert     | Crawley   | Downton Abbey                |
+|       203 | Roger      | Ramjet    | How to Grow Cucumbers        |
+|       209 | Roger      | Thornhill | Sam Needs a Friend           |
+|       203 | Roger      | Ramjet    | Studying is Your Friend      |
+|       203 | Roger      | Ramjet    | Challenging Puzzles          |
+|       203 | Roger      | Ramjet    | Where to Start               |
+|       209 | Roger      | Thornhill | To Have and To Cherish       |
+|       210 | Scottie    | Ferguson  | Mr. Ed                       |
+|       210 | Scottie    | Ferguson  | Taks McGrill                 |
+|       210 | Scottie    | Ferguson  | Sam Needs a Friend           |
+|       201 | Thomas     | Magnum    | Using the Library            |
+|       201 | Thomas     | Magnum    | Studying is Your Friend      |
+|       201 | Thomas     | Magnum    | Lacey Discovers Herself      |
+|       201 | Thomas     | Magnum    | Gardening Tips               |
+|       201 | Thomas     | Magnum    | Too Many Cooks               |
+|       208 | Waco       | Kid       | Eating Healthy               |
+|       208 | Waco       | Kid       | Red Burn                     |
+|       208 | Waco       | Kid       | Database Theory              |
+|       208 | Waco       | Kid       | How to Grow Tomatoes         |
++-----------+------------+-----------+------------------------------+
+50 rows in set (0.00 sec)
+
+MariaDB [mikelynn]> notee
