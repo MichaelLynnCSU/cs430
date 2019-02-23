@@ -12,6 +12,9 @@ If neither library has the book, a message telling the member that the library d
 Note: this system is providing info only, do not check the book out as a part of these actions.
 Loop back to ask for the next member's id
 
+# UML
+https://github.com/MichaelLynnCSU/cs430/blob/master/LibraryUML.pdf
+
 #### Running the Jar
 run the below via command line:
 
